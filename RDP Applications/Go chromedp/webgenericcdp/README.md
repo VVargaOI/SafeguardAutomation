@@ -6,7 +6,7 @@ It supports TOTP code injection.
 
 Logs are written to AppData like web_generic did.
 
-Sample usage: _--cmd "C:\_RApp\webgenericcdp.exe" --args "-url https://10.10.35.170:4433/SGwebtest.html -login v::#account::{account}||s::#password::{password}||v::#targetaccount::{Target.AccountName}||o::#totp::{Target.TotpCodes}::4 -debug"_
+Sample usage: _--cmd "C:\_RApp\webgenericcdp.exe" --args "-url https://host:port/SGwebtest.html -login v::#account::{account}||s::#password::{password}||v::#targetaccount::{Target.AccountName}||o::#totp::{Target.TotpCodes}::4 -debug"_
  
 Other args accepted by webgenericcdp (not tested): 
 * -edge
