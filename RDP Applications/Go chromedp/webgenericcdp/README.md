@@ -32,13 +32,13 @@ Logs are written into the following folder of the RDP host account: %AppData%\On
 
 Debug logging for webgenericcdp can be enabled via the app publishing configuration using the -debug switch within --args.
 
-Debug logging for chromedp can be enabled the ```chromedb_logging``` setting within the configuration file.
+Debug logging for chromedp can be enabled the ```chromedp_logging``` setting within the configuration file.
 
 If the RemoteApp-Launcher console window does not close it means that the script did not find all elements on the page and it's still retrying.
 
 ### Other issues
 
-* In case of running lots of tests within a short period of time, Windows Security may flag webgenericcdp as Trojan. Symptom is that the RemoteApp-Launcher window closes and there is no any log from webgenericcdp. The following event is visible in the OI-SG-RemoteApp-Launcher log: *Error occurred while trying to launch application: Error occurred while trying to launch process. Got error: Operation did not complete successfully because the file contains a virus or potentially unwanted software. (os error 225) *
+In case of running lots of tests within a short period of time, Windows Security may flag webgenericcdp as Trojan. Symptom is that the RemoteApp-Launcher window closes and there is no any log from webgenericcdp. The following event is visible in the OI-SG-RemoteApp-Launcher log: *Error occurred while trying to launch application: Error occurred while trying to launch process. Got error: Operation did not complete successfully because the file contains a virus or potentially unwanted software. (os error 225)
 
 FIXME:picture
 
