@@ -38,14 +38,17 @@ If the RemoteApp-Launcher console window does not close it means that the script
 
 ### Other issues
 
+#### Webgenericcdp detected as trojan
+
 In case of running lots of tests within a short period of time, Windows Security may flag webgenericcdp as Trojan. Symptom is that the RemoteApp-Launcher window closes and there is no any log from webgenericcdp. The following event is visible in the OI-SG-RemoteApp-Launcher log: ```Error occurred while trying to launch application: Error occurred while trying to launch process. Got error: Operation did not complete successfully because the file contains a virus or potentially unwanted software. (os error 225)```
 
-FIXME:picture
+Open ```Windows Security``` and look for ```Virus and threat protection```
 
-In that case Allow it via Windows Security
+<img width="657" height="520" alt="2025-06-03 09_55_38-winserver oneidentity demo - SPS" src="https://github.com/user-attachments/assets/084c8bbf-fdfc-4c88-bd0f-be6a0015289d" />
 
-FIXME:picture
+Then Allow webgenericcdp via Windows Security
 
+<img width="670" height="479" alt="2025-06-03 09_56_38-winserver oneidentity demo - SPS" src="https://github.com/user-attachments/assets/96222859-4a64-42aa-b4da-3628f5d3d46f" />
 
 ## Known issues
 
