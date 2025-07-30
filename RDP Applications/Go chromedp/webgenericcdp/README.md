@@ -1,4 +1,4 @@
-# Webgenericcdp - Generic web automation script for Safeguard based on Go/chromedb
+# Webgenericcdp - Generic web automation script for Safeguard based on Go/chromedp
 
 Webgenericcdp works only with OI-SG-RemoteApp-Launcher version 3.0.1 or later, together with the --use-stdin parameter/ This restriction ensures that no sensitive information is visible in command line parameters.
 
@@ -38,9 +38,12 @@ If the RemoteApp-Launcher console window does not close it means that the script
 
 ### Other issues
 
-* In case of running lots of tests within a short period of time, Windows Security may flag webgenericcdp as Trojan. Symptom is that the RemoteApp-Launcher window closes and there is no any log from webgenericcdp. The following event is visible in the OI-SG-RemoteApp-Launcher log: *Error occurred while trying to launch application: Error occurred while trying to launch process. Got error: Operation did not complete successfully because the file contains a virus or potentially unwanted software. (os error 225)*
+* In case of running lots of tests within a short period of time, Windows Security may flag webgenericcdp as Trojan. Symptom is that the RemoteApp-Launcher window closes and there is no any log from webgenericcdp. The following event is visible in the OI-SG-RemoteApp-Launcher log: *Error occurred while trying to launch application: Error occurred while trying to launch process. Got error: Operation did not complete successfully because the file contains a virus or potentially unwanted software. (os error 225) *
+
 FIXME:picture
+
 In that case Allow it via Windows Security
+
 FIXME:picture
 
 
