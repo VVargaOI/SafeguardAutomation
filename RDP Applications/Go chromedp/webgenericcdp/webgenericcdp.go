@@ -28,24 +28,26 @@ import (
 )
 
 type Config struct {
-	dumpStdinToLog    bool
-	chromedp_logging  string
-	url               string
-	browser           string
-	loginActions      string
-	splitCharacters   string
-	browserInputDelay int
-	browser_incognito bool
-	browser_insecure  bool
-	browser_kiosk     bool
-	user_data_dir     string
-	basicAuthUsername string
+	dumpStdinToLog       bool
+	chromedp_logging     string
+	chromedp_queryOption string
+	url                  string
+	browser              string
+	loginActions         string
+	splitCharacters      string
+	browserInputDelay    int
+	browser_incognito    bool
+	browser_insecure     bool
+	browser_kiosk        bool
+	user_data_dir        string
+	basicAuthUsername    string
 }
 
 func defaultConfig() Config {
 	return Config{
-		dumpStdinToLog:   false,   // WARNING, this contains the clear-text password
-		chromedp_logging: "error", // error|log|debug
+		dumpStdinToLog:       false,   // WARNING, this contains the clear-text password
+		chromedp_logging:     "error", // error|log|debug
+		chromedp_queryOption: "ByID",  // ByID|ByQuery|BySearch  https://pkg.go.dev/github.com/chromedp/chromedp#ByID
 		//url               //has no default
 		browser: "chrome", // Must be chrome or edge
 		//loginActions		//has no default
@@ -155,6 +157,8 @@ func main() {
 				}
 			case "chromedp_logging":
 				config.chromedp_logging = strings.Split(fileScanner.Text(), "=")[1]
+			case "chromedp_queryOption":
+				config.chromedp_queryOption = strings.Split(fileScanner.Text(), "=")[1]
 			case "url":
 				config.url = strings.Split(fileScanner.Text(), "=")[1]
 			case "browser":
@@ -397,10 +401,18 @@ func main() {
 
 			}
 
+			queryOption := chromedp.ByID
+			switch {
+			case config.chromedp_queryOption == "ByQuery":
+				queryOption = chromedp.ByQuery
+			case config.chromedp_queryOption == "BySearch":
+				queryOption = chromedp.BySearch
+			}
+
 			switch {
 			case action[0] == "c":
 				if len(action) == 2 {
-					taskList = append(taskList, chromedp.Click(action[1], chromedp.ByID, chromedp.NodeVisible))
+					taskList = append(taskList, chromedp.Click(action[1], queryOption, chromedp.NodeVisible))
 					slog.Debug("[taskList] Click", "selector", action[1], "sessionid", uuid)
 				} else {
 					slog.Error("[taskList] Click action with improper number of configuration items. Format: c::<selector>", "action", actions[i], "sessionid", uuid)
@@ -425,7 +437,7 @@ func main() {
 								os.Exit(1)
 							}
 							val := fmt.Sprint(launcherStdin[inputs[0]]) + inputs[1] + fmt.Sprint(launcherStdin[inputs[2]])
-							taskList = append(taskList, chromedp.SendKeys(action[1], val, chromedp.ByID, chromedp.NodeVisible))
+							taskList = append(taskList, chromedp.SendKeys(action[1], val, queryOption, chromedp.NodeVisible))
 							slog.Debug("[taskList] Enter value", "selector", action[1], "value", val, "sessionid", uuid)
 
 						} else {
@@ -434,18 +446,18 @@ func main() {
 								slog.Error("[taskList] Object does not exist in STDIN", "object", action[2], "sessionid", uuid)
 								os.Exit(1)
 							}
-							taskList = append(taskList, chromedp.SendKeys(action[1], fmt.Sprint(launcherStdin[action[2]]), chromedp.ByID, chromedp.NodeVisible))
+							taskList = append(taskList, chromedp.SendKeys(action[1], fmt.Sprint(launcherStdin[action[2]]), queryOption, chromedp.NodeVisible))
 							slog.Debug("[taskList] Enter value", "selector", action[1], "value", fmt.Sprint(launcherStdin[action[2]]), "sessionid", uuid)
 						}
 					} else if keyBoardString {
 						// Enter static string from configuration
-						taskList = append(taskList, chromedp.SendKeys(action[1], fmt.Sprint(action[2]), chromedp.ByID, chromedp.NodeVisible))
+						taskList = append(taskList, chromedp.SendKeys(action[1], fmt.Sprint(action[2]), queryOption, chromedp.NodeVisible))
 						slog.Debug("[taskList] Enter value", "selector", action[1], "value", fmt.Sprint(action[2]), "sessionid", uuid)
 					} else if keyBoardKey {
 						// Enter static keyboard key from configuration
 						switch {
 						case action[2] == "kb.Enter":
-							taskList = append(taskList, chromedp.SendKeys(action[1], kb.Enter, chromedp.ByID, chromedp.NodeVisible))
+							taskList = append(taskList, chromedp.SendKeys(action[1], kb.Enter, queryOption, chromedp.NodeVisible))
 							slog.Debug("[taskList] Enter keyboard key", "selector", action[1], "key", action[2], "sessionid", uuid)
 						default:
 							slog.Error("[taskList] Key not supported", "key", action[2], "sessionid", uuid)
@@ -463,7 +475,7 @@ func main() {
 						os.Exit(1)
 					}
 
-					taskList = append(taskList, chromedp.SendKeys(action[1], fmt.Sprint(launcherStdin[action[2]]), chromedp.ByID, chromedp.NodeVisible))
+					taskList = append(taskList, chromedp.SendKeys(action[1], fmt.Sprint(launcherStdin[action[2]]), queryOption, chromedp.NodeVisible))
 					slog.Debug("[taskList] Enter secret", "selector", action[1], "value", "<hidden>", "sessionid", uuid)
 				} else {
 					slog.Error("[taskList] Enter secret action with improper number of configuration items. Format: s::<selector>::<secret-value>", "action", actions[i], "sessionid", uuid)
@@ -537,7 +549,7 @@ func main() {
 					if otp == "" {
 						log.Fatalln("[taskList][TOTP_Lookup] Have not found valid TOTP code, exit.", "sessionid", uuid)
 					} else {
-						taskList = append(taskList, chromedp.SendKeys(action[1], otp, chromedp.ByID, chromedp.NodeVisible))
+						taskList = append(taskList, chromedp.SendKeys(action[1], otp, queryOption, chromedp.NodeVisible))
 						slog.Debug("[taskList] Enter TOTP code", "selector", action[1], "code", otp, "sessionid", uuid)
 					}
 				}
