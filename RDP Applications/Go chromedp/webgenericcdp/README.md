@@ -30,7 +30,7 @@ If ```basicAuthUsername``` is configured, ```loginActions``` is ignored and the 
 
 Logs are written into the following folder of the RDP host account: %AppData%\OneIdentity\OI-SG-RemoteApp-Launcher-Orchestration
 
-Debug logging for webgenericcdp can be enabled via the app publishing configuration using the -debug switch within --args.
+Debug logging for webgenericcdp can be enabled via the app publishing configuration using the -debug switch within --args of the published app's configuration.
 
 Debug logging for chromedp can be enabled the ```chromedp_logging``` setting within the configuration file.
 
@@ -38,17 +38,11 @@ If the RemoteApp-Launcher console window does not close it means that the script
 
 ### Other issues
 
-#### Webgenericcdp detected as trojan
+* In case of running lots of tests within a short period of time, Windows Security may flag webgenericcdp as Trojan. Symptom is that the RemoteApp-Launcher window closes and there is no log from webgenericcdp. The following event is visible in the OI-SG-RemoteApp-Launcher log: *Error occurred while trying to launch application: Error occurred while trying to launch process. Got error: Operation did not complete successfully because the file contains a virus or potentially unwanted software. (os error 225)*
+![SafeguardAutomation](Images/troubleshooting_trojan_1.png)
+In that case Allow it via Windows Security
+![SafeguardAutomation](Images/troubleshooting_trojan_2.png)
 
-In case of running lots of tests within a short period of time, Windows Security may flag webgenericcdp as Trojan. Symptom is that the RemoteApp-Launcher window closes and there is no any log from webgenericcdp. The following event is visible in the OI-SG-RemoteApp-Launcher log: ```Error occurred while trying to launch application: Error occurred while trying to launch process. Got error: Operation did not complete successfully because the file contains a virus or potentially unwanted software. (os error 225)```
-
-Open ```Windows Security``` and look for ```Virus and threat protection```
-
-<img width="657" height="520" alt="2025-06-03 09_55_38-winserver oneidentity demo - SPS" src="https://github.com/user-attachments/assets/084c8bbf-fdfc-4c88-bd0f-be6a0015289d" />
-
-Then Allow webgenericcdp via Windows Security
-
-<img width="670" height="479" alt="2025-06-03 09_56_38-winserver oneidentity demo - SPS" src="https://github.com/user-attachments/assets/96222859-4a64-42aa-b4da-3628f5d3d46f" />
 
 ## Known issues
 
