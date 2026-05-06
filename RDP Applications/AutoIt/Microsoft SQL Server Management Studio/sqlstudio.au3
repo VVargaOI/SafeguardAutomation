@@ -1,4 +1,5 @@
 ; ONLY FOR DEMO USE
+; Supporting SSMS version 20 or earlier. For SSMS version 22 or later see SafeguardAutomation/RDP Applications/Go/sqlstudio
 ; Initial version based on the OI SQL Developer launcher:
 ;   https://github.com/OneIdentity/SafeguardAutomation/blob/master/AutoIt/SQLDeveloper/SQLDeveloper_20.4.1.au3
 ; Safeguard Launcher Application Command Line parameters: --cmd <path>\sqlstudio.exe --args <environment variable for SSMS folder path> {username} {password} {asset} [sps ip]
