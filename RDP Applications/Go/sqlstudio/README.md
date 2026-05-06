@@ -2,6 +2,10 @@
 
 Launches SQL Server Management Studio (SSMS) 22 or later with Entra ID Interactive authentication (supporting login with password and OTP provided by SPP) and automates the login dialog using Windows UI Automation (UIA). Designed to run as a RemoteApp under **OI-RemoteDesktopLauncher 3.0.1+**.
 
+It starts SSMS with 'ssms.exe -S {Target.AssetNetworkAddress} -U {Target.AccountName@Target.AccountDomainName} -A ActiveDirectoryInteractive'
+
+Values are received via STDIN from the Launcher.
+
 ## Launcher configuration
 
 ```

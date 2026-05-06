@@ -153,8 +153,6 @@ func main() {
 			case "ssmspath":
 				_, ssmspathValue, _ := strings.Cut(fileScanner.Text(), "=")
 				config.ssmspath = ssmspathValue
-			case "chromedp_logging", "chromedp_queryOption", "ssmsDebugPort":
-				slog.Debug("Ignoring legacy configuration key: "+strings.Split(fileScanner.Text(), "=")[0], "sessionid", sessionID)
 			default:
 				slog.Error("Unknown configuration name: "+strings.Split(fileScanner.Text(), "=")[0], "sessionid", sessionID)
 				os.Exit(1)
