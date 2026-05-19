@@ -17,6 +17,8 @@ Values are received via STDIN from the Launcher.
 | Key | Required | Default | Description |
 |-----|----------|---------|-------------|
 | `ssmspath` | Yes | — | Directory containing `ssms.exe` |
+| `encrypt` | No | `optional` | Encryption for the SSMS connection: `optional`, `mandatory`, or `strict` (passed as `-N`) |
+| `trustServerCertificate` | No | `true` | Trust the server certificate without validation (passed as `-C`) |
 | `loginActions` | No | see below | Login automation steps |
 | `browserInputDelay` | No | `1000` | Delay in ms after each click action |
 | `uiaWaitTimeout` | No | `60` | Max seconds to wait for each UIA element |
