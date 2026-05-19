@@ -29,19 +29,23 @@ import (
 )
 
 type Config struct {
-	dumpStdinToLog    bool
-	loginActions      string
-	browserInputDelay int
-	ssmspath          string
-	uiaWaitTimeout    int
+	dumpStdinToLog         bool
+	loginActions           string
+	browserInputDelay      int
+	ssmspath               string
+	uiaWaitTimeout         int
+	trustServerCertificate bool
+	encrypt                string
 }
 
 func defaultConfig() Config {
 	return Config{
-		dumpStdinToLog:    false,
-		loginActions:      "s::#i0118::{password}||c::#idSIButton9::10||o::#idTxtBx_SAOTCC_OTC::{Target.TotpCodes}::3||c::#idSubmit_SAOTCC_Continue::10||c::#idBtn_Back::5",
-		browserInputDelay: 1000,
-		uiaWaitTimeout:    60,
+		dumpStdinToLog:         false,
+		loginActions:           "s::#i0118::{password}||c::#idSIButton9::10||o::#idTxtBx_SAOTCC_OTC::{Target.TotpCodes}::3||c::#idSubmit_SAOTCC_Continue::10||c::#idBtn_Back::5",
+		browserInputDelay:      1000,
+		uiaWaitTimeout:         60,
+		trustServerCertificate: true,
+		encrypt:                "optional",
 	}
 }
 
@@ -153,6 +157,19 @@ func main() {
 			case "ssmspath":
 				_, ssmspathValue, _ := strings.Cut(fileScanner.Text(), "=")
 				config.ssmspath = ssmspathValue
+			case "trustServerCertificate":
+				config.trustServerCertificate, err = strconv.ParseBool(strings.Split(fileScanner.Text(), "=")[1])
+				if err != nil {
+					slog.Error("Error occured while parsing configuration: "+strings.Split(fileScanner.Text(), "=")[1]+"to boolean.", "sessionid", sessionID)
+					os.Exit(1)
+				}
+			case "encrypt":
+				encryptValue := strings.Split(fileScanner.Text(), "=")[1]
+				if encryptValue != "optional" && encryptValue != "mandatory" && encryptValue != "strict" {
+					slog.Error("Invalid value for encrypt configuration: "+encryptValue+". Valid values: optional, mandatory, strict", "sessionid", sessionID)
+					os.Exit(1)
+				}
+				config.encrypt = encryptValue
 			default:
 				slog.Error("Unknown configuration name: "+strings.Split(fileScanner.Text(), "=")[0], "sessionid", sessionID)
 				os.Exit(1)
@@ -188,7 +205,14 @@ func main() {
 	ssmsExe := strings.TrimSuffix(config.ssmspath, `\`) + `\ssms.exe`
 	slog.Debug("Launching SSMS", "path", ssmsExe, "server", targetAddress, "user", accountName, "sessionid", sessionID)
 
-	cmd := exec.Command(ssmsExe, "-S", targetAddress, "-U", accountName, "-A", "ActiveDirectoryInteractive")
+	ssmsArgs := []string{"-S", targetAddress, "-U", accountName, "-A", "ActiveDirectoryInteractive"}
+	if config.encrypt != "" {
+		ssmsArgs = append(ssmsArgs, "-N", strings.ToUpper(config.encrypt[:1])+config.encrypt[1:])
+	}
+	if config.trustServerCertificate {
+		ssmsArgs = append(ssmsArgs, "-C")
+	}
+	cmd := exec.Command(ssmsExe, ssmsArgs...)
 	if err := cmd.Start(); err != nil {
 		slog.Error("Error launching SSMS", "path", ssmsExe, "error", err.Error(), "sessionid", sessionID)
 		os.Exit(1)
